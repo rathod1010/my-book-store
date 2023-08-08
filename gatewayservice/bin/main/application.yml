@@ -1,0 +1,61 @@
+server:
+  port: 8099
+  
+spring:
+  application:
+    name: GATEWAY-SERVICE
+    
+  main:
+    web-application-type: reactive
+ 
+    
+    
+    
+  cloud:
+    gateway:
+      routes:
+      - id: USER-SERVICE
+        uri: lb://USER-SERVICE
+        predicates:
+        - Path=/user/**
+        
+      - id: BOOK-SERVICE
+        uri: lb://BOOK-SERVICE
+        predicates:
+        - Path=/book/**
+        
+      - id: CART-SERVICE
+        uri: lb://CART-SERVICE
+        predicates:
+        - Path=/cart/**  
+        filters:
+           - AuthenticationFilter
+        
+      - id: CARTITEM-SERVICE
+        uri: lb://CARTITEM-SERVICE
+        predicates:
+        - Path=/cartitem/**
+        filters:
+        - AuthenticationFilter 
+         
+       
+      - id: ORDER-SERVICE
+        uri: lb://ORDER-SERVICE
+        predicates:
+        - Path=/order/** 
+        filters:
+        - AuthenticationFilter
+        
+        
+      
+      
+#eureka
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka        
